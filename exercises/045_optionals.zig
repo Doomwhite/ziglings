@@ -16,6 +16,7 @@
 // (a u32 integer in this case), we need to guarantee that it
 // isn't null. One way to do this is to THREATEN IT with the
 // "orelse" statement.
+// LOL
 //
 //     var bar = foo orelse 2;
 //
@@ -29,7 +30,7 @@ pub fn main() void {
 
     // Please threaten the result so that answer is either the
     // integer value from deepThought() OR the number 42:
-    const answer: u8 = result;
+    const answer: u8 = result orelse 42;
 
     std.debug.print("The Ultimate Answer: {}.\n", .{answer});
 }
