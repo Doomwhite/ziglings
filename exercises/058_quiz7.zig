@@ -104,7 +104,7 @@ const Path = struct {
 // us write code that runs at compile time to "automate" repetitive
 // code (much like macros in other languages), but we haven't learned
 // how to do that yet!
-const a_paths = [_]Path{
+const a_paths = [1]Path{
     Path{
         .from = &a, // from: Archer's Point
         .to = &b, //   to: Bridge
@@ -112,7 +112,7 @@ const a_paths = [_]Path{
     },
 };
 
-const b_paths = [_]Path{
+const b_paths = [2]Path{
     Path{
         .from = &b, // from: Bridge
         .to = &a, //   to: Archer's Point
@@ -125,7 +125,7 @@ const b_paths = [_]Path{
     },
 };
 
-const c_paths = [_]Path{
+const c_paths = [2]Path{
     Path{
         .from = &c, // from: Cottage
         .to = &d, //   to: Dogwood Grove
@@ -138,7 +138,7 @@ const c_paths = [_]Path{
     },
 };
 
-const d_paths = [_]Path{
+const d_paths = [3]Path{
     Path{
         .from = &d, // from: Dogwood Grove
         .to = &b, //   to: Bridge
@@ -156,7 +156,7 @@ const d_paths = [_]Path{
     },
 };
 
-const e_paths = [_]Path{
+const e_paths = [2]Path{
     Path{
         .from = &e, // from: East Pond
         .to = &c, //   to: Cottage
@@ -169,7 +169,7 @@ const e_paths = [_]Path{
     },
 };
 
-const f_paths = [_]Path{
+const f_paths = [1]Path{
     Path{
         .from = &f, // from: Fox Pond
         .to = &d, //   to: Dogwood Grove
@@ -192,8 +192,8 @@ const TripItem = union(enum) {
             // Oops! The hermit forgot how to capture the union values
             // in a switch statement. Please capture both values as
             // 'p' so the print statements work!
-            .place => print("{s}", .{p.name}),
-            .path => print("--{}->", .{p.dist}),
+            .place => |p| print("{s}", .{p.name}),
+            .path => |p| print("--{}->", .{p.dist}),
         }
     }
 };
@@ -255,7 +255,7 @@ const HermitsNotebook = struct {
             // dereference and optional value "unwrapping" look
             // together. Remember that you return the address with the
             // "&" operator.
-            if (place == entry.*.?.place) return entry;
+            if (place == entry.*.?.place) return &entry.*.?;
             // Try to make your answer this long:__________;
         }
         return null;
@@ -309,7 +309,7 @@ const HermitsNotebook = struct {
     //
     // Looks like the hermit forgot something in the return value of
     // this function. What could that be?
-    fn getTripTo(self: *HermitsNotebook, trip: []?TripItem, dest: *Place) void {
+    fn getTripTo(self: *HermitsNotebook, trip: []?TripItem, dest: *Place) TripError!void {
         // We start at the destination entry.
         const destination_entry = self.getEntry(dest);
 
@@ -409,7 +409,7 @@ pub fn main() void {
     // aside memory for the trip and have the hermit's notebook fill
     // in the trip from the destination back to the path. Note that
     // this is the first time we've actually used the destination!
-    var trip = [_]?TripItem{null} ** (place_count * 2);
+    var trip = [1]?TripItem{null} ** (place_count * 2);
 
     notebook.getTripTo(trip[0..], destination) catch |err| {
         print("Oh no! {}\n", .{err});
