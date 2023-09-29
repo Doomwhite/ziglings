@@ -34,7 +34,7 @@ pub fn main() void {
     };
 
     chars[1] = Character{
-        .class = .bard,
+        .role = .bard,
         .gold = 10,
         .health = 100,
         .experience = 20,
